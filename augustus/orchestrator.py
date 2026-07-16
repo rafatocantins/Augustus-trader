@@ -47,6 +47,49 @@ DATA_DIR = Path(os.environ.get(
 
 # ─── Config ──────────────────────────────────────────────────────────────────
 
+def _env_float(name, default):
+    """Load float from environment with fallback to default."""
+    val = os.environ.get(name, '')
+    if val:
+        try:
+            return float(val)
+        except ValueError:
+            pass
+    return default
+
+
+def load_thresholds():
+    """
+    Load trading thresholds from environment variables.
+    Defaults are the production values used by Rafael since June 2026.
+    Override any of them in your .env file.
+    """
+    return {
+        # ── Trade sizing ──────────────────────────────────────────────────
+        "min_eur_to_trade":   _env_float("AUGUSTUS_MIN_TRADE_EUR", 3.0),
+        "trade_pct_portfolio": _env_float("AUGUSTUS_TRADE_PCT", 0.15),
+        "max_trade_eur":      _env_float("AUGUSTUS_MAX_TRADE_EUR", 15.0),
+
+        # ── Bear market regime ────────────────────────────────────────────
+        "bear_cash_target":       _env_float("AUGUSTUS_BEAR_CASH", 0.35),
+        "bear_rsi_oversold":      _env_float("AUGUSTUS_BEAR_RSI", 15),
+        "bear_max_position_pct":  _env_float("AUGUSTUS_BEAR_MAX_POS", 0.20),
+
+        # ── Bull market regime ────────────────────────────────────────────
+        "rsi_oversold":        _env_float("AUGUSTUS_BULL_RSI_OVERSOLD", 35),
+        "rsi_overbought":      _env_float("AUGUSTUS_BULL_RSI_OVERBOUGHT", 70),
+        "min_24h_change_signal": _env_float("AUGUSTUS_MIN_CHANGE_SIGNAL", 3.0),
+
+        # ── Risk & Sanity ─────────────────────────────────────────────────
+        "max_retries":             int(_env_float("AUGUSTUS_MAX_RETRIES", 2)),
+        "max_price_change_4h":     _env_float("AUGUSTUS_MAX_CHANGE_4H", 20.0),
+        "max_price_change_24h":    _env_float("AUGUSTUS_MAX_CHANGE_24H", 50.0),
+        "max_alt_change_24h":      _env_float("AUGUSTUS_MAX_ALT_CHANGE_24H", 80.0),
+        "min_btc_price_eur":       _env_float("AUGUSTUS_MIN_BTC_EUR", 10000),
+        "max_btc_price_eur":       _env_float("AUGUSTUS_MAX_BTC_EUR", 500000),
+    }
+
+
 CONFIG = {
     "models": {
         "primary": {
@@ -64,24 +107,8 @@ CONFIG = {
             "price_output_per_m": 1.20,
         },
     },
-    "thresholds": {
-        "min_eur_to_trade": 3.0,
-        "trade_pct_portfolio": 0.15,
-        "max_trade_eur": 15.0,
-        "bear_cash_target": 0.35,
-        "bear_rsi_oversold": 15,
-        "bear_max_position_pct": 0.20,
-        "rsi_oversold": 35,
-        "rsi_overbought": 70,
-        "min_24h_change_signal": 3.0,
-        "max_retries": 2,
-        # Sanity bounds
-        "max_price_change_4h": 20.0,
-        "max_price_change_24h": 50.0,
-        "max_alt_change_24h": 80.0,
-        "min_btc_price_eur": 10000,
-        "max_btc_price_eur": 500000,
-    },
+    # thresholds loaded dynamically from env vars with production defaults
+    "thresholds": load_thresholds(),
     "coin_map": {
         "AVAX": "avalanche-2",
         "ALGO": "algorand",

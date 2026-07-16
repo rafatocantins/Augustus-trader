@@ -180,15 +180,34 @@ The system uses two models: a primary (makes decisions) and a validator (optiona
 
 ### Thresholds
 
-All trading parameters are in `CONFIG["thresholds"]`:
+All trading parameters are configurable via environment variables (see `.env.example`). **Defaults are the production values** proven since June 2026. Uncomment and change any threshold in your `.env` file.
 
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `trade_pct_portfolio` | 0.15 | % of portfolio per trade |
-| `max_trade_eur` | 15.0 | Cap per trade in EUR |
-| `rsi_oversold` | 35 | RSI threshold to buy |
-| `rsi_overbought` | 70 | RSI threshold to sell |
-| `bear_cash_target` | 0.35 | Cash target in bear market |
+| Parameter | Env Var | Default | Description |
+|-----------|---------|---------|-------------|
+| Trade size % | `AUGUSTUS_TRADE_PCT` | 0.15 | % of portfolio per trade |
+| Min trade | `AUGUSTUS_MIN_TRADE_EUR` | 3.0 | Minimum EUR per trade |
+| Max trade | `AUGUSTUS_MAX_TRADE_EUR` | 15.0 | Cap per trade in EUR |
+| Bear cash target | `AUGUSTUS_BEAR_CASH` | 0.35 | Cash target in bear market |
+| Bear RSI buy | `AUGUSTUS_BEAR_RSI` | 15 | RSI to buy in bear (deep oversold) |
+| Bear max position | `AUGUSTUS_BEAR_MAX_POS` | 0.20 | Max % per asset in bear |
+| Bull RSI buy | `AUGUSTUS_BULL_RSI_OVERSOLD` | 35 | RSI threshold to buy |
+| Bull RSI sell | `AUGUSTUS_BULL_RSI_OVERBOUGHT` | 70 | RSI threshold to sell |
+| Signal threshold | `AUGUSTUS_MIN_CHANGE_SIGNAL` | 3.0 | Min 24h % change to flag |
+
+Example — more aggressive strategy:
+```env
+AUGUSTUS_TRADE_PCT=0.25
+AUGUSTUS_BULL_RSI_OVERSOLD=40
+AUGUSTUS_MIN_CHANGE_SIGNAL=2.0
+```
+
+Example — more conservative:
+```env
+AUGUSTUS_TRADE_PCT=0.08
+AUGUSTUS_BEAR_CASH=0.60
+AUGUSTUS_BULL_RSI_OVERSOLD=25
+```
+
 
 ### Adding New Coins
 
