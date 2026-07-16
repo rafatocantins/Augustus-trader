@@ -1,0 +1,34 @@
+# Augustus Trading — Crontab Example
+# ====================================
+# Copy the lines you want to your crontab: crontab -e
+#
+# The production system uses 3 layers:
+#   1. Sentinel: every 15 min (portfolio monitoring + trade dispatch)
+#   2. Stop-loss watchdog: every 5 min (position protection)
+#   3. S²-MAD: 4x daily at 9,12,15,21 (deeper hybrid analysis)
+#
+# Adjust the INTERVAL and PATH variables to match your setup.
+
+AUGUSTUS_PATH=/home/user/augustus-trading
+PYTHON=/usr/bin/python3
+
+# ─── Layer 1: Trading Runner (every 15 min) ─────────────────────────────────
+# Monitors portfolio, dispatches LLM analysis, executes trades.
+# Change the interval by modifying the first field (*/15).
+# For more aggressive trading: */10 (every 10 min)
+# For conservative: */30 (every 30 min)
+*/15 * * * * cd $AUGUSTUS_PATH && $PYTHON runner.py --mode full >> logs/runner.log 2>&1
+
+# ─── Layer 2: Stop-Loss Watchdog (every 5 min) ──────────────────────────────
+# Protects open positions. Runs independently of the trading layer.
+# Recommended: keep at 5 min for safety.
+*/5 * * * * cd $AUGUSTUS_PATH && $PYTHON runner.py --mode stop-loss >> logs/stoploss.log 2>&1
+
+# ─── Layer 3: Deep Analysis (4x daily) ──────────────────────────────────────
+# Runs at market open (EU), US pre-market, US open, Asia open (UTC).
+# Use --regime auto for market regime detection, or override with --regime bull/bear.
+0 9,12,15,21 * * * cd $AUGUSTUS_PATH && $PYTHON runner.py --mode full >> logs/runner.log 2>&1
+
+# ─── Optional: Quick Portfolio Check (hourly) ───────────────────────────────
+# Just checks balances without LLM calls. Good for monitoring.
+0 * * * * cd $AUGUSTUS_PATH && $PYTHON runner.py --mode quick >> logs/quick.log 2>&1

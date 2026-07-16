@@ -120,11 +120,38 @@ python -m augustus.kraken_client
 
 ### 4. Automate (Optional)
 
-Add to crontab for autonomous operation every 15 minutes:
+The **runner** replicates the production scheduling system with 3 layers:
 
 ```bash
-*/15 * * * * cd /path/to/augustus-trading && python -m augustus.orchestrator --mode trade >> logs/cron.log 2>&1
+# Full autonomous mode (every 15 min)
+python runner.py --mode full
+
+# Stop-loss watchdog only (every 5 min)
+python runner.py --mode stop-loss
+
+# Quick balance check (no LLM, no trades)
+python runner.py --mode quick
 ```
+
+**Recommended crontab setup** (copy from `crontab.example`):
+
+```bash
+# Layer 1: Trading (every 15 min — adjust interval as needed)
+*/15 * * * * cd ~/augustus-trading && python3 runner.py --mode full >> logs/runner.log 2>&1
+
+# Layer 2: Stop-loss protection (every 5 min)
+*/5 * * * * cd ~/augustus-trading && python3 runner.py --mode stop-loss >> logs/stoploss.log 2>&1
+
+# Layer 3: Deep analysis (4x daily at market opens)
+0 9,12,15,21 * * * cd ~/augustus-trading && python3 runner.py --mode full >> logs/runner.log 2>&1
+```
+
+**To change the monitoring frequency**, edit the first field in your crontab:
+- `*/10` = every 10 min (more aggressive)
+- `*/30` = every 30 min (more conservative)
+- `*/5` = every 5 min (high frequency — beware API rate limits)
+
+See `crontab.example` for the full template with comments.
 
 ---
 
@@ -188,6 +215,8 @@ augustus-trading/
 │   ├── orchestrator.py    # Main trading loop + LLM analysis
 │   ├── kraken_client.py   # Kraken API wrapper (balance, orders, ticker)
 │   └── stop_loss.py       # Stop-loss manager (native + watchdog)
+├── runner.py              # Autonomous scheduler (replaces cron complexity)
+├── crontab.example        # Production-grade crontab template
 ├── results/               # Track record (gitignored)
 ├── docs/
 │   └── ARCHITECTURE.md    # Detailed architecture + paper references
