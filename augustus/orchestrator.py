@@ -578,8 +578,10 @@ def analyse_market(portfolio_context, portfolio_detail, total_eur,
         f"- BULL: cash<EUR3 -> SELL asset with biggest 24h gain\n"
         f"- BULL: cash>=EUR3 -> BUY asset with lowest RSI\n"
         f"- NEVER [SILENT] if low cash with assets to sell\n\n"
-        f"Respond ONLY with JSON. NO text before or after:\n"
-        f'{{"asset":"XXX","action":"buy|sell","pair_kraken":"XXXEUR","amount_eur":X,"reason":"short"}}'
+        f"Respond ONLY with valid JSON. Replace ALL placeholders with real values.\n"
+        f'Example: {{"asset":"ALGO","action":"sell","pair_kraken":"ALGOEUR","amount_eur":4.5,"reason":"RSI overbought at 71"}}\n'
+        f"WARNING: Do NOT copy the example. Use YOUR analysis, YOUR values.\n"
+        f"WARNING: No XXX, no X, no buy|sell — only real asset names, real amounts."
     )
 
     result = call_model(primary["provider"], primary["model"], prompt,
