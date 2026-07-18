@@ -1,1 +1,2 @@
 krakenex>=2.2.0
+pyyaml>=6.0

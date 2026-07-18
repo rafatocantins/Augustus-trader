@@ -1,0 +1,31 @@
+trading:
+  trade_pct: 0.15
+  min_trade_eur: 3.0
+  max_trade_eur: 15.0
+bull:
+  rsi_oversold: 35
+  rsi_overbought: 70
+bear:
+  cash_target: 0.35
+  rsi_buy: 15
+  max_position: 0.2
+stop_loss:
+  stop_percent: 5.0
+  trailing_percent: 5.0
+risk:
+  max_consecutive_losses: 3
+  max_daily_drawdown_pct: 15.0
+  vol_spike_btc_pct_1h: 5.0
+models:
+  crypto_agent:
+    provider: deepseek
+    model: deepseek-v4-flash
+  trading_agent:
+    provider: deepseek
+    model: deepseek-v4-pro
+sanity:
+  max_price_change_4h: 20.0
+  max_price_change_24h: 50.0
+  max_alt_change_24h: 80.0
+  min_btc_price_eur: 10000
+  max_btc_price_eur: 500000
