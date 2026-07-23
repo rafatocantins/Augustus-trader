@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Augustus Multi-Agent Orchestrator v4 — Multi-Agent + Decoupled Risk
+Augustus Multi-Agent Orchestrator V6 — Multi-Agent + Decoupled Risk
 ====================================================================
-Melhorias v4 (2026-06-27) — baseadas em papers:
+Melhorias V6 (2026-06-27) — baseadas em papers:
 
   [2501.00826] Multi-Agent Crypto Portfolio (+133.52%, Sharpe 1.502):
     → Crypto Agent (técnico) + Trading Agent (decisão final)
@@ -23,7 +23,20 @@ Mantém toda a segurança v3:
   [2606.10749] Sanity validation
   [2606.07940] Trust scoring
 
-Arquitectura v4:
+
+  V6 (2026-07-22) — baseadas em papers:
+  [Karbalaii 2025] Volume Anomaly Detection (Pump & Dump):
+    → Volume >3x média + preço perto do suporte = acumulação
+  [Day et al. 2023] Bollinger Bands (60,2σ) Bitcoin:
+    → AHPR >50% com MA=60d em BTC
+  [PyQuantLab 2025] BB-KC Squeeze Strategy:
+    → Sharpe >1.0 com combinação Bollinger+Keltner
+  [Farzulla 2026] The Extremity Premium (F&G Regimes):
+    → F&G <25 ou >75 = spreads altos, evitar trading
+  [Ficura 2023] Micro-cap Reversal:
+    → Small/illiquid: reversão semanal (t=-7.31)
+
+Arquitectura V6:
   Dados → Sanity Check → Crypto Agent (Flash) → Trading Agent (Pro)
   → Risk Module (determinístico) → Integrity Check → Execução real
 
@@ -1051,7 +1064,7 @@ def run_risk_module(portfolio_detail, total_eur):
     # 4. BTC Regime (SMA 50) — backtest provou +10.75pp alpha
     regime, btc_price, sma50 = get_btc_regime()
 
-    # 5. Fear & Greed Kill Switch — v4.1
+    # 5. Fear & Greed Kill Switch — V6.0
     fg_value, fg_class = get_fear_greed_index()
     fg_reason = ""
     if fg_value is not None and fg_value <= 15:

@@ -161,7 +161,31 @@ augustus config --set TRAILING_PERCENT=10   # Trail largo
 
 ---
 
-## Fase 5: Paper Trading (Simulacao) 🧪
+
+## ✅ Fase 6: V6.0 — Strategic Trading (Jul 2026) — CONCLUÍDA
+
+- [x] Dead Zone Filter (RSI 40-65 → silent)
+- [x] Trade sizing EUR5-8 (comissionado)
+- [x] Silent action no pipeline
+- [x] Volume Anomaly Detector
+- [x] Strategy Market (coil squeeze + volume + F&G)
+- [x] Fear & Greed regime-aware trading
+- [x] Paper-backed: Karbalaii 2025, Day 2023, Farzulla 2026
+
+## 🔜 Fase 7: Micro-cap Momentum (Q3 2026)
+
+- [ ] Micro-cap scanner (<EUR50M market cap)
+- [ ] Volume spike confirmation
+- [ ] Reversal strategy for small/illiquid (Ficura 2023)
+- [ ] Volatility-managed momentum for large caps (Grobys 2025)
+
+## 🔜 Fase 8: DCA + Fear-Driven Accumulation (Q3 2026)
+
+- [ ] BTC/ETH weekly DCA
+- [ ] F&G-scaled position sizing
+- [ ] Automatic take-profit at F&G >75
+
+## Fase 5 (concluída): Paper Trading (Simulacao) 🧪
 
 Antes de arriscar dinheiro real, o utilizador pode testar com dados historicos ou em tempo real sem ordens reais.
 

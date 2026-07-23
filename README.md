@@ -63,6 +63,17 @@ Running on Kraken with a ~EUR60 portfolio, 15-minute intervals:
 
 ---
 
+
+### V6.0 — Strategic Trading (2026-07-22)
+
+**Dead Zone Filter**: RSI 40-65 → no trade. Only act on strong signals.
+**Proportional Sizing**: EUR5-8 per trade (up from EUR1-3).
+**Volume Anomaly Detector**: Identifies accumulation via volume spikes >3x average.
+**Strategy Market**: Coil/squeeze breakout detection for any asset. Runs every 4h.
+**Silent Action**: "Do nothing" is a valid, profitable decision.
+
+Based on: Karbalaii (2025), Day et al. (2023), Farzulla (2026), Fičura (2023).
+
 ## Quick Start
 
 ### Prerequisites
